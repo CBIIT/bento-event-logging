@@ -1,0 +1,14 @@
+{
+  "name": "bento-event-logging",
+  "version": "1.0.0",
+  "dependencies": {
+    "@jest/globals": "^29.3.1",
+    "uuid": "^9.0.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
