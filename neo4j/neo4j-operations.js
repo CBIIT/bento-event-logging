@@ -1,0 +1,51 @@
+
+
+const logEvent = async function (neo4jDriver, bentoEvent){
+    try{
+        await executeQuery(neo4jDriver, {}, bentoEvent.getCreateCommand(), null);
+        return true;
+    }
+    catch(exception){
+        console.error(exception);
+        return false;
+    }
+}
+
+const getLastLogin = async function (neo4jDriver, userID, userEmail, userIDP){
+    const cypher = `
+        MATCH (e:Event)
+        WHERE
+            e.user_id = '${userID}' AND
+            e.user_email = '${userEmail}' AND
+            e.user_idp = '${userIDP}'
+        WITH e
+        ORDER BY e.timestamp DESC
+        RETURN COLLECT(e)[0] AS event
+    `
+    return await executeQuery(neo4jDriver, {}, cypher, 'event')
+}
+
+async function executeQuery(driver, parameters, cypher, returnLabel) {
+    const session = driver.session();
+    const tx = session.beginTransaction();
+    try {
+        const result = await tx.run(cypher, parameters);
+        return result.records.map(record => {
+            return record.get(returnLabel)
+        })
+    } catch (error) {
+        throw error;
+    } finally {
+        try {
+            await tx.commit();
+        } catch (err) {
+        }
+        await session.close();
+    }
+}
+
+module.exports = {
+    logEvent,
+    getLastLogin,
+    executeQuery
+}

@@ -8,7 +8,7 @@ const BentoEvent = class {
     getCreateCommand(){
         const keys = Object.keys(this);
         let cypher = "CREATE (e:Event) ";
-        keys.forEach(key => cypher += `SET e.${key} = ${this[key]} `);
+        keys.forEach(key => cypher += `SET e.${key} = '${this[key]}' `);
         return cypher;
     }
 };
