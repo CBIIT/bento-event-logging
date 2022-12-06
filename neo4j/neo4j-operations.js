@@ -25,6 +25,17 @@ const getLastLogin = async function (neo4jDriver, userID, userEmail, userIDP){
     return await executeQuery(neo4jDriver, {}, cypher, 'event')
 }
 
+const getUserID = async function (neo4jDriver, userEmail, userIDP){
+    const cypher = `
+        MATCH (u:User)
+        WHERE 
+            u.email = '${userEmail}' AND 
+            u.IDP = '${userIDP}'
+        RETURN u.userID AS userID
+    `
+    return (await executeQuery(neo4jDriver, {}, cypher, 'userID'))[0];
+}
+
 async function executeQuery(driver, parameters, cypher, returnLabel) {
     const session = driver.session();
     const tx = session.beginTransaction();
@@ -47,5 +58,6 @@ async function executeQuery(driver, parameters, cypher, returnLabel) {
 module.exports = {
     logEvent,
     getLastLogin,
+    getUserID,
     executeQuery
 }

@@ -7,6 +7,9 @@ const driver = neo4j.driver(
     neo4j.auth.basic(process.env.TEST_NEO4J_USER, process.env.TEST_NEO4J_PASSWORD),
     {disableLosslessIntegers: true}
 );
+const email = "test@email.com"
+const id = "123"
+const idp = "testing-idp"
 
 afterAll(async () => {
     await driver.close();
@@ -15,24 +18,18 @@ afterAll(async () => {
 beforeEach(async () => {
     const cypher = `
         MATCH (e:Event)
-        WHERE e.user_idp = 'test-idp'
+        WHERE e.user_idp = 'testing-idp'
         DETACH DELETE e
     `
     await executeQuery(driver, {}, cypher, null);
 });
 
 test('Test Log Events', async () => {
-    const email = "test@email.com"
-    const id = "123"
-    const idp = "test-idp"
     const loginEvent = new LoginEvent(id, email, idp);
     expect(await logEvent(driver, loginEvent)).toBe(true);
 });
 
 test('Get Last Login Test', async () => {
-    const email = "test@email.com"
-    const id = "123"
-    const idp = "test-idp"
     // Get last login with no events in database
     let result = await getLastLogin(driver, id, email, idp);
     expect(result[0]).toBeNull();
@@ -52,9 +49,6 @@ test('Get Last Login Test', async () => {
 });
 
 test('Test No DB connection', async () => {
-    const email = "test@email.com"
-    const id = "123"
-    const idp = "test-idp"
     // Create last login event
     let event = new LoginEvent(id, email, idp);
     expect(await logEvent(null, event)).toBe(false);
