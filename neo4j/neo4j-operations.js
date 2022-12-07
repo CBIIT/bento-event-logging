@@ -2,7 +2,7 @@
 
 const logEvent = async function (neo4jDriver, bentoEvent){
     try{
-        await executeQuery(neo4jDriver, {}, bentoEvent.getCreateCommand(), null);
+        await executeQuery(neo4jDriver, {}, getCreateCommand(bentoEvent), null);
         return true;
     }
     catch(exception){
@@ -36,6 +36,13 @@ const getUserID = async function (neo4jDriver, userEmail, userIDP){
     return (await executeQuery(neo4jDriver, {}, cypher, 'userID'))[0];
 }
 
+const getCreateCommand = function(bentoEvent){
+    const keys = Object.keys(bentoEvent);
+    let cypher = "CREATE (e:Event) ";
+    keys.forEach(key => cypher += `SET e.${key} = '${bentoEvent[key]}' `);
+    return cypher;
+}
+
 async function executeQuery(driver, parameters, cypher, returnLabel) {
     const session = driver.session();
     const tx = session.beginTransaction();
@@ -59,5 +66,6 @@ module.exports = {
     logEvent,
     getLastLogin,
     getUserID,
+    getCreateCommand,
     executeQuery
 }

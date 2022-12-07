@@ -1,6 +1,7 @@
 const {LoginEvent} = require("../../model/login-event.js");
 const {LOGIN} = require("../../const/event-types.js");
 const {expect} = require("@jest/globals");
+const {getCreateCommand} = require("../../neo4j/neo4j-operations");
 
 test('Create Login Event', () => {
     const email = "test@email.com"
@@ -19,7 +20,7 @@ test('Get Create Command', () => {
     const id = "123"
     const idp = "test-idp"
     const loginEvent = new LoginEvent(id, email, idp);
-    expect(loginEvent.getCreateCommand()).toBeDefined();
-    expect(typeof loginEvent.getCreateCommand()).toBe('string')
-    console.log(loginEvent.getCreateCommand());
+    expect(getCreateCommand(loginEvent)).toBeDefined();
+    expect(typeof getCreateCommand(loginEvent)).toBe('string')
+    console.log(getCreateCommand(loginEvent));
 });
