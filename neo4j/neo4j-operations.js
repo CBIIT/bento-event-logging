@@ -17,7 +17,7 @@ const getLastLogin = async function (neo4jDriver, userID, userEmail, userIDP){
         WHERE
             e.user_id = '${userID}' AND
             e.user_email = '${userEmail}' AND
-            e.user_idp = '${userIDP}'
+            e.user_idp =~ '(?i)${userIDP}'
         WITH e
         ORDER BY e.timestamp DESC
         RETURN COLLECT(e)[0] AS event
@@ -30,7 +30,7 @@ const getUserID = async function (neo4jDriver, userEmail, userIDP){
         MATCH (u:User)
         WHERE 
             u.email = '${userEmail}' AND 
-            u.IDP = '${userIDP}'
+            u.IDP =~ '(?i)${userIDP}'
         RETURN u.userID AS userID
     `
     return (await executeQuery(neo4jDriver, {}, cypher, 'userID'))[0];
