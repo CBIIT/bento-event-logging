@@ -1,14 +1,14 @@
 const {SingleUserEvent} = require("./single-user-event");
-const {LOGIN} = require("../const/event-types");
+const {REGISTRATION} = require("../const/event-types");
 
-const LoginEvent = class extends SingleUserEvent{
+const RegistrationEvent = class extends SingleUserEvent{
     constructor(userID, userEmail, userIDP){
         super(userID, userEmail, userIDP);
-        this.event_type = LOGIN
+        this.event_type = REGISTRATION
     };
 
 }
 
 module.exports = {
-    LoginEvent
+    RegistrationEvent
 }

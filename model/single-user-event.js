@@ -1,6 +1,6 @@
 const {BentoEvent} = require("./bento-event");
 
-const AuthenticationEvent = class extends BentoEvent{
+const SingleUserEvent = class extends BentoEvent{
     constructor(userID, userEmail, userIDP) {
         super();
         this.user_id = userID;
@@ -10,5 +10,5 @@ const AuthenticationEvent = class extends BentoEvent{
 }
 
 module.exports = {
-    AuthenticationEvent
+    SingleUserEvent
 }

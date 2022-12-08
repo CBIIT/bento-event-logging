@@ -2,6 +2,8 @@ const {expect, test, beforeAll, beforeEach, afterEach, afterAll} = require('@jes
 const {logEvent, getLastLogin, executeQuery} = require("../../neo4j/neo4j-operations");
 const neo4j = require('neo4j-driver');
 const {LoginEvent} = require("../../model/login-event");
+const {DownloadEvent} = require("../../model/download-event");
+const {RegistrationEvent} = require("../../model/registration-event");
 const driver = neo4j.driver(
     process.env.TEST_NEO4J_URI,
     neo4j.auth.basic(process.env.TEST_NEO4J_USER, process.env.TEST_NEO4J_PASSWORD),
@@ -24,9 +26,22 @@ beforeEach(async () => {
     await executeQuery(driver, {}, cypher, null);
 });
 
-test('Test Log Events', async () => {
+test('Test Login Event', async () => {
     const loginEvent = new LoginEvent(id, email, idp);
+    verifyAllKeysAreDefined(loginEvent);
     expect(await logEvent(driver, loginEvent)).toBe(true);
+});
+
+test('Test Registration Event', async () => {
+    const registrationEvent = new RegistrationEvent(id, email, idp);
+    verifyAllKeysAreDefined(registrationEvent);
+    expect(await logEvent(driver, registrationEvent)).toBe(true);
+});
+
+test('Test Download Event', async () => {
+    const downloadEvent = new DownloadEvent(id, email, idp, ".test", "test-file-id", "Test Name", 100);
+    verifyAllKeysAreDefined(downloadEvent);
+    expect(await logEvent(driver, downloadEvent)).toBe(true);
 });
 
 test('Get Last Login Test', async () => {
@@ -53,3 +68,8 @@ test('Test No DB connection', async () => {
     let event = new LoginEvent(id, email, idp);
     expect(await logEvent(null, event)).toBe(false);
 });
+
+function verifyAllKeysAreDefined(object){
+    const keys = Object.keys(object);
+    keys.forEach(key => expect(object[key]).toBeDefined());
+}
