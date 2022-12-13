@@ -1,3 +1,4 @@
+const {LOGIN} = require("../const/event-types");
 
 
 const logEvent = async function (neo4jDriver, bentoEvent){
@@ -11,11 +12,11 @@ const logEvent = async function (neo4jDriver, bentoEvent){
     }
 }
 
-const getLastLogin = async function (neo4jDriver, userID, userEmail, userIDP){
+const getLastLogin = async function (neo4jDriver, userEmail, userIDP){
     const cypher = `
         MATCH (e:Event)
         WHERE
-            e.user_id = '${userID}' AND
+            e.event_type = '${LOGIN}' AND
             e.user_email = '${userEmail}' AND
             e.user_idp =~ '(?i)${userIDP}'
         WITH e
