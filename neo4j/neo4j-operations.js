@@ -44,6 +44,24 @@ const getCreateCommand = function(bentoEvent){
     return cypher;
 }
 
+const getEventsAfterTimestamp = async function (neo4jDriver, timestamp) {
+    const cypher = `
+        MATCH (e:Event)
+        WHERE e.timestamp > '${timestamp}'
+        RETURN e AS events
+    `
+    return (await executeQuery(neo4jDriver, {}, cypher, 'events'));
+}
+
+const clearEventsAfterTimestamp = async function (neo4jDriver, timestamp) {
+    const cypher = `
+        MATCH (e:Event)
+        WHERE e.timestamp > '${timestamp}'
+        DETACH DELETE e
+    `
+    return (await executeQuery(neo4jDriver, {}, cypher, ''));
+}
+
 async function executeQuery(driver, parameters, cypher, returnLabel) {
     const session = driver.session();
     const tx = session.beginTransaction();
@@ -68,5 +86,7 @@ module.exports = {
     getLastLogin,
     getUserID,
     getCreateCommand,
-    executeQuery
+    executeQuery,
+    getEventsAfterTimestamp,
+    clearEventsAfterTimestamp
 }
