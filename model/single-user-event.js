@@ -1,5 +1,6 @@
 const {BentoEvent} = require("./bento-event");
 
+//TODO (code refactoring) - investigate alternative not involving multi-level inheritance
 const SingleUserEvent = class extends BentoEvent{
     constructor(userID, userEmail, userIDP) {
         super();
