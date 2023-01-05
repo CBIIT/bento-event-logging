@@ -1,3 +1,4 @@
+const {LOGIN} = require("../const/event-types");
 
 
 const logEvent = async function (neo4jDriver, bentoEvent){
@@ -11,11 +12,11 @@ const logEvent = async function (neo4jDriver, bentoEvent){
     }
 }
 
-const getLastLogin = async function (neo4jDriver, userID, userEmail, userIDP){
+const getLastLogin = async function (neo4jDriver, userEmail, userIDP){
     const cypher = `
         MATCH (e:Event)
         WHERE
-            e.user_id = '${userID}' AND
+            e.event_type = '${LOGIN}' AND
             e.user_email = '${userEmail}' AND
             e.user_idp =~ '(?i)${userIDP}'
         WITH e
@@ -43,6 +44,24 @@ const getCreateCommand = function(bentoEvent){
     return cypher;
 }
 
+const getEventsAfterTimestamp = async function (neo4jDriver, timestamp) {
+    const cypher = `
+        MATCH (e:Event)
+        WHERE e.timestamp > '${timestamp}'
+        RETURN e AS events
+    `
+    return (await executeQuery(neo4jDriver, {}, cypher, 'events'));
+}
+
+const clearEventsAfterTimestamp = async function (neo4jDriver, timestamp) {
+    const cypher = `
+        MATCH (e:Event)
+        WHERE e.timestamp > '${timestamp}'
+        DETACH DELETE e
+    `
+    return (await executeQuery(neo4jDriver, {}, cypher, ''));
+}
+
 async function executeQuery(driver, parameters, cypher, returnLabel) {
     const session = driver.session();
     const tx = session.beginTransaction();
@@ -67,5 +86,7 @@ module.exports = {
     getLastLogin,
     getUserID,
     getCreateCommand,
-    executeQuery
+    executeQuery,
+    getEventsAfterTimestamp,
+    clearEventsAfterTimestamp
 }
