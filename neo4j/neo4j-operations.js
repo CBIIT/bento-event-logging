@@ -62,6 +62,14 @@ const clearEventsAfterTimestamp = async function (neo4jDriver, timestamp) {
     return (await executeQuery(neo4jDriver, {}, cypher, ''));
 }
 
+const getFileByID = async function (neo4jDriver, fileID) {
+    const cypher = `
+        MATCH (f:file {file_id: '${fileID}'})
+        RETURN f AS file
+    `;
+    return (await executeQuery(neo4jDriver, {}, cypher, 'file'))[0];
+}
+
 async function executeQuery(driver, parameters, cypher, returnLabel) {
     const session = driver.session();
     const tx = session.beginTransaction();
@@ -88,5 +96,6 @@ module.exports = {
     getCreateCommand,
     executeQuery,
     getEventsAfterTimestamp,
-    clearEventsAfterTimestamp
+    clearEventsAfterTimestamp,
+    getFileByID
 }
