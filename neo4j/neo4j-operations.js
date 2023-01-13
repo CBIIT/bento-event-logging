@@ -44,6 +44,16 @@ const getCreateCommand = function(bentoEvent){
     return cypher;
 }
 
+const getRecentEvents = async function (neo4jDriver, limit) {
+    const cypher = `
+        MATCH (e:Event)
+        RETURN e
+        ORDER BY e.timestamp DESC
+        LIMIT ${limit}
+    `
+    return (await executeQuery(neo4jDriver, {}, cypher, 'e'));
+}
+
 const getEventsAfterTimestamp = async function (neo4jDriver, timestamp) {
     const cypher = `
         MATCH (e:Event)
@@ -97,5 +107,6 @@ module.exports = {
     executeQuery,
     getEventsAfterTimestamp,
     clearEventsAfterTimestamp,
-    getFileByID
+    getFileByID,
+    getRecentEvents
 }
