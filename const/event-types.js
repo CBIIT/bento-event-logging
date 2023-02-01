@@ -6,5 +6,6 @@ module.exports = Object.freeze({
     UPDATE: 'Update',
     REGISTRATION: 'Registration',
     REQUEST: 'Request',
-    REVIEW: 'Review'
+    REVIEW: 'Review',
+    DISABLE: 'Disable'
 });
