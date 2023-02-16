@@ -23,7 +23,7 @@ const formatVariables = function(variables, lowerCaseParamsList, formatMap){
             variables[key] = formatSingleVariable(variables[key], formatMap);
         }
     }
-    return variables;
+    return variables ? variables : {};
 }
 
 function initFormatMap(valuesLists){
