@@ -7,5 +7,7 @@ module.exports = Object.freeze({
     REGISTRATION: 'Registration',
     REQUEST: 'Request',
     REVIEW: 'Review',
-    DISABLE: 'Disable'
+    DISABLE: 'Disable',
+    TOKEN_CREATED: 'Token_Created',
+    TOKEN_INVALIDATED: 'Token_Invalidated'
 });
