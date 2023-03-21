@@ -6,7 +6,6 @@ const TokenInvalidatedEvent = class extends SingleUserEvent{
         super(user.ID, user.email, user.IDP);
         this.event_type = TOKEN_INVALIDATED;
         this.token_uuid = token.uuid;
-        this.token_expiration = token.expiration;
     };
 }
 
